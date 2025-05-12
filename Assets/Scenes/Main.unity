@@ -787,6 +787,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 514673165}
+  - component: {fileID: 514673166}
   m_Layer: 5
   m_Name: PlayerInputs
   m_TagString: Untagged
@@ -815,6 +816,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &514673166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514673164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6825e33520484458821cfc48bb0963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllers:
+  - Type: 0
+    GenericRef: {fileID: 1531371774}
+  - Type: 1
+    GenericRef: {fileID: 1767430360}
 --- !u!1 &572468699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1715,6 +1733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb765cc963db4ee4db20e8df80fdea8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controllerType: 0
 --- !u!1 &1767430358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,9 +1819,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1767430358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 495cd053a273d37429042ea038881947, type: 3}
+  m_Script: {fileID: 11500000, guid: bb765cc963db4ee4db20e8df80fdea8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controllerType: 1
 --- !u!1 &2084489703
 GameObject:
   m_ObjectHideFlags: 0
