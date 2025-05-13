@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System;
 public class PlayerControllerView : MonoBehaviour
 {
+    private const float SCALE_DOWN_VAL = 0.5f;
+
     [SerializeField] private List<Controller<Image>> _controllers;
     private Dictionary<ControllerType, Image> _controllerCollection = new();
     //===============================================================
@@ -27,9 +29,11 @@ public class PlayerControllerView : MonoBehaviour
     }
     private void OnControllerHold(ControllerType controllerType) {
         _controllerCollection[controllerType].color = Color.yellow;
+        _controllerCollection[controllerType].transform.localScale = Vector3.one * SCALE_DOWN_VAL;
     }
     private void OnControllerRelease(ControllerType controllerType) {
         _controllerCollection[controllerType].color = Color.white;
+        _controllerCollection[controllerType].transform.localScale = Vector3.one;
     }
 }
 [Serializable]
