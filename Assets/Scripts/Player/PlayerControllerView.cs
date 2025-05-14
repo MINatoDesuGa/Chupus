@@ -27,11 +27,19 @@ public class PlayerControllerView : MonoBehaviour
         }
         _controllers.Clear();
     }
-    private void OnControllerHold(ControllerType controllerType) {
-        _controllerCollection[controllerType].color = Color.yellow;
-        _controllerCollection[controllerType].transform.localScale = Vector3.one * SCALE_DOWN_VAL;
+    private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
+        switch(playerAction) {
+            case PlayerAction.Rotate:
+                _controllerCollection[controllerType].color = Color.yellow;
+                _controllerCollection[controllerType].transform.localScale = Vector3.one * SCALE_DOWN_VAL;
+                break;
+            case PlayerAction.Jump:
+                _controllerCollection[controllerType].color = Color.red;
+                break;
+        }
+        
     }
-    private void OnControllerRelease(ControllerType controllerType) {
+    private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
         _controllerCollection[controllerType].color = Color.white;
         _controllerCollection[controllerType].transform.localScale = Vector3.one;
     }

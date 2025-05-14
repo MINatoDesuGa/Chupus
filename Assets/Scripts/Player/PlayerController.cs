@@ -17,17 +17,11 @@ public class PlayerController : MonoBehaviour
         Init();
     }
     private void Update() {
-        if (!_isJumping && Input.GetKeyDown(KeyCode.Space)) {
-            _isJumping = true;
-            transform.DOJump(transform.position + (transform.forward * 2f), 1f, 1, .5f).OnComplete(()=>_isJumping = false);
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            Jump();
         }
         ///TODO: change this to event based
-        var input = PlayerControllerInput._currentPos;
-        Vector3 direction = new Vector3(input.x, 0f, input.y); // convert 2D input to 3D direction
-        if (direction != Vector3.zero) {
-            Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
+        Rotate();
     }
     private void OnEnable() {
         PlayerControllerInput.OnHold += OnControllerHold;
@@ -47,11 +41,27 @@ public class PlayerController : MonoBehaviour
         }
         _controllers.Clear();
     }
-    private void OnControllerHold(ControllerType controllerType) {
-        OnActivateController(controllerType, false);
+    private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
+        switch(playerAction) {
+            case PlayerAction.Rotate:
+                OnActivateController(controllerType, false);
+                break;
+            case PlayerAction.Jump:
+                ///TODO: power slider enable (Maybe cancel based or loop slider low to high)
+                break;
+        }
+        
     }
-    private void OnControllerRelease(ControllerType controllerType) {
-        OnActivateController(ControllerType.Both, true);
+    private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
+        switch(playerAction) {
+            case PlayerAction.Rotate:
+                OnActivateController(ControllerType.Both, true);
+                break;
+            case PlayerAction.Jump: 
+                Jump();
+                break;
+        }
+        
     }
     private void OnActivateController(ControllerType controllerType, bool active) {
         switch(controllerType) {
@@ -75,5 +85,18 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-    
+    private void Rotate() {
+        var input = PlayerControllerInput._currentPos;
+        Vector3 direction = new Vector3(input.x, 0f, input.y); // convert 2D input to 3D direction
+        if (direction != Vector3.zero) {
+            Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+    private void Jump() {
+        if(_isJumping) return;
+
+        _isJumping = true;
+        transform.DOJump(transform.position + (transform.forward * 2f), 1f, 1, .5f).OnComplete(() => _isJumping = false);
+    }
 }

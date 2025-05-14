@@ -9,30 +9,40 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     */
     private const float MAX_DRAG_DISTANCE = 50f;
 
-    public static event Action<ControllerType> OnHold;
-    public static event Action<ControllerType> OnRelease;
+    public static event Action<ControllerType, PlayerAction> OnHold;
+    public static event Action<ControllerType, PlayerAction> OnRelease;
+    public static event Action<bool> OnActionStarted;
+
+    public static Vector2 _currentPos;
 
     [SerializeField] private ControllerType _controllerType;
 
     private RectTransform _rectTransform;
-
-
-    public static Vector2 _currentPos;
-
-    private bool _isActivated = false;
+    private PlayerAction _currentActiveAction;
     private Vector3 _initialPos;
-    private float _maxDragX, _maxDragY, _minDragX, _minDragY;
     //====================================================================
     private void Start() {
         _rectTransform = GetComponent<RectTransform>();
 
         _initialPos = transform.position;
-        _maxDragX = _initialPos.x + MAX_DRAG_DISTANCE;
-        _maxDragY = _initialPos.y + MAX_DRAG_DISTANCE;
-        _minDragX = _initialPos.x - MAX_DRAG_DISTANCE;
-        _minDragY = _initialPos.y - MAX_DRAG_DISTANCE;
+    }
+    private void OnEnable() {
+        OnActionStarted += OnAnyActionStarted;
+    }
+    private void OnDisable() {
+        OnActionStarted -= OnAnyActionStarted;
     }
     //====================================================================
+    private void OnAnyActionStarted(bool active) {
+        if(!active) {
+            _currentActiveAction = PlayerAction.NotActive;
+            return;
+        }
+
+        if(_currentActiveAction == PlayerAction.NotActive) {
+            _currentActiveAction = PlayerAction.Jump;
+        }
+    }
     public void OnDrag(PointerEventData eventData) {
         _currentPos += eventData.delta;
         if (_currentPos.magnitude > MAX_DRAG_DISTANCE) { 
@@ -40,30 +50,28 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
         }
         
         _rectTransform.anchoredPosition = _currentPos;
-        /*float newX = transform.position.x;
-        float newY = transform.position.y;
-        if (!_isActivated) {
-            newY = Mathf.Clamp(transform.position.y + eventData.delta.y, _minDragY, _maxDragY);
-        } else {
-            newX = Mathf.Clamp(transform.position.x + eventData.delta.x, _minDragX, _maxDragX);
-        }
-
-        transform.position = new Vector3( newX, newY, 0);*/
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        //TODO: a coroutine to handle specified time to trigger hold
-        _isActivated = true;
+        if(_currentActiveAction == PlayerAction.NotActive) {
+            _currentActiveAction = PlayerAction.Rotate;
+            OnActionStarted?.Invoke(true);
+        }
         _currentPos = _rectTransform.anchoredPosition;
-        OnHold?.Invoke(_controllerType);
+        OnHold?.Invoke(_controllerType, _currentActiveAction);
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        _isActivated = false;
-        OnRelease?.Invoke(_controllerType);
+        OnRelease?.Invoke(_controllerType, _currentActiveAction);
+        if(_currentActiveAction == PlayerAction.Rotate) {
+            OnActionStarted?.Invoke(false);
+        }
         transform.position = _initialPos;
     }
 }
 public enum ControllerType {
     LeftController, RightController, Both
+}
+public enum PlayerAction {
+    NotActive, Rotate, Jump
 }
