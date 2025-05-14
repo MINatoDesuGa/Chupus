@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Windows;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour 
 {
@@ -10,16 +10,22 @@ public class PlayerController : MonoBehaviour
     private Dictionary<ControllerType, GameObject> _controllerCollection = new();
 
     private CharacterController _characterController;
+
+    private bool _isJumping = false;
     //============================================================
     private void Start() {
         Init();
     }
     private void Update() {
+        if (!_isJumping && Input.GetKeyDown(KeyCode.Space)) {
+            _isJumping = true;
+            transform.DOJump(transform.position + (transform.forward * 2f), 1f, 1, .5f).OnComplete(()=>_isJumping = false);
+        }
         ///TODO: change this to event based
         var input = PlayerControllerInput._currentPos;
         Vector3 direction = new Vector3(input.x, 0f, input.y); // convert 2D input to 3D direction
         if (direction != Vector3.zero) {
-            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }

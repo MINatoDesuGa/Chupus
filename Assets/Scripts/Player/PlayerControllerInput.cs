@@ -5,9 +5,9 @@ using UnityEngine.EventSystems;
 public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     /*
-     * Activated controller will handle jump , unactivated one will handle player rotation 
+     * UnActivated controller will handle jump , Activated one will handle player rotation 
     */
-    private const float MAX_DRAG_DISTANCE = 25f;
+    private const float MAX_DRAG_DISTANCE = 50f;
 
     public static event Action<ControllerType> OnHold;
     public static event Action<ControllerType> OnRelease;
@@ -15,6 +15,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     [SerializeField] private ControllerType _controllerType;
 
     private RectTransform _rectTransform;
+
 
     public static Vector2 _currentPos;
 
@@ -37,7 +38,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
         if (_currentPos.magnitude > MAX_DRAG_DISTANCE) { 
             _currentPos = _currentPos.normalized * MAX_DRAG_DISTANCE;
         }
-
+        
         _rectTransform.anchoredPosition = _currentPos;
         /*float newX = transform.position.x;
         float newY = transform.position.y;
