@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         
     }
     private void Rotate() {
-        var input = PlayerControllerInput._currentPos;
+        var input = PlayerControllerInput.InputDirection;
         Vector3 direction = new Vector3(input.x, 0f, input.y); // convert 2D input to 3D direction
         if (direction != Vector3.zero) {
             Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);

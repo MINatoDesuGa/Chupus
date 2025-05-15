@@ -13,13 +13,18 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     public static event Action<ControllerType, PlayerAction> OnRelease;
     public static event Action<bool> OnActionStarted;
 
-    public static Vector2 _currentPos;
+    //public static Vector2 _currentPos;
+    public static Vector2 InputDirection;
 
     [SerializeField] private ControllerType _controllerType;
 
     private RectTransform _rectTransform;
     private PlayerAction _currentActiveAction;
     private Vector3 _initialPos;
+    [SerializeField]
+    private RectTransform joystickBackground;
+    
+
     //====================================================================
     private void Start() {
         _rectTransform = GetComponent<RectTransform>();
@@ -44,12 +49,20 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
         }
     }
     public void OnDrag(PointerEventData eventData) {
-        _currentPos += eventData.delta;
-        if (_currentPos.magnitude > MAX_DRAG_DISTANCE) { 
-            _currentPos = _currentPos.normalized * MAX_DRAG_DISTANCE;
-        }
-        
-        _rectTransform.anchoredPosition = _currentPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            joystickBackground,
+            eventData.position,
+            eventData.pressEventCamera,
+            out Vector2 localPoint
+        );
+
+        // Calculate normalized input direction
+        Vector2 radius = joystickBackground.sizeDelta / 2;
+        InputDirection = localPoint / radius;
+        InputDirection = Vector2.ClampMagnitude(InputDirection, 1f);
+
+        // Move the handle visually
+        _rectTransform.anchoredPosition = InputDirection * radius;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -57,7 +70,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
             _currentActiveAction = PlayerAction.Rotate;
             OnActionStarted?.Invoke(true);
         }
-        _currentPos = _rectTransform.anchoredPosition;
+        //InputDirection = _rectTransform.anchoredPosition;
         OnHold?.Invoke(_controllerType, _currentActiveAction);
     }
 
@@ -67,6 +80,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
             OnActionStarted?.Invoke(false);
         }
         transform.position = _initialPos;
+        InputDirection = Vector2.zero;
     }
 }
 public enum ControllerType {
