@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
             case PlayerAction.Rotate:
                 OnActivateController(ControllerType.Both, true);
                 break;
+            case PlayerAction.Jump2:
             case PlayerAction.Jump: 
                 _jumpDistance = GlobalVars.Instance.JumpPower;
                 GlobalVars.Instance.JumpPower = 0;

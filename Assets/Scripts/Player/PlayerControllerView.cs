@@ -40,8 +40,13 @@ public class PlayerControllerView : MonoBehaviour
         
     }
     private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
+        if (playerAction == PlayerAction.Rotate) {
+            _controllerCollection[controllerType].color = Color.white;
+            _controllerCollection[controllerType].transform.localScale = Vector3.one;
+            return;
+        }
+
         _controllerCollection[controllerType].color = Color.white;
-        _controllerCollection[controllerType].transform.localScale = Vector3.one;
     }
 }
 [Serializable]

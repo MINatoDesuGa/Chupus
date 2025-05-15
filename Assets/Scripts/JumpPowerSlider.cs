@@ -4,6 +4,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class JumpPowerSlider : MonoBehaviour
 {
+    public static bool IsJumpSliderRunning = false;
+
     [SerializeField] private Slider _slider;
     [SerializeField] private float _sliderMoveSpeed = 10f;
 
@@ -25,8 +27,10 @@ public class JumpPowerSlider : MonoBehaviour
     //=====================================================
     private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
         if (playerAction != PlayerAction.Jump) return;
+
         gameObject.SetActive(true);
         ResetCoroutine();
+        IsJumpSliderRunning = true;
         _sliderCoroutine = StartCoroutine(PowerSliderTrigger());
 
         IEnumerator PowerSliderTrigger() { 
@@ -37,8 +41,9 @@ public class JumpPowerSlider : MonoBehaviour
         }
     }
     private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
-        if (playerAction != PlayerAction.Jump) { return; }
-        ///TODO: pass slider value to jump power , perform jump then reset
+        if (playerAction == PlayerAction.Rotate) return;
+
+        IsJumpSliderRunning = false;
         _slider.value = 0f;
         gameObject.SetActive(false);
     }

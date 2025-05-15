@@ -11,7 +11,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
 
     public static event Action<ControllerType, PlayerAction> OnHold;
     public static event Action<ControllerType, PlayerAction> OnRelease;
-    public static event Action<bool> OnActionStarted;
+    public static event Action<bool> OnRotateActionStarted;
 
     //public static Vector2 _currentPos;
     public static Vector2 InputDirection;
@@ -33,19 +33,23 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
         _initialPos = transform.position;
     }
     private void OnEnable() {
-        OnActionStarted += OnAnyActionStarted;
+        OnRotateActionStarted += OnRotationActionStarted;
     }
     private void OnDisable() {
-        OnActionStarted -= OnAnyActionStarted;
+        OnRotateActionStarted -= OnRotationActionStarted;
     }
     //====================================================================
-    private void OnAnyActionStarted(bool active) {
+    private void OnRotationActionStarted(bool active) {
         if(!active) {
+            if(_currentActiveAction == PlayerAction.Jump && JumpPowerSlider.IsJumpSliderRunning) {
+                _currentActiveAction = PlayerAction.Jump2;
+                return;
+            }
             _currentActiveAction = PlayerAction.NotActive;
             return;
         }
 
-        if(_currentActiveAction == PlayerAction.NotActive) {
+        if(_currentActiveAction != PlayerAction.Rotate) {
             _currentActiveAction = PlayerAction.Jump;
         }
     }
@@ -71,7 +75,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     public void OnPointerDown(PointerEventData eventData) {
         if(_currentActiveAction == PlayerAction.NotActive) {
             _currentActiveAction = PlayerAction.Rotate;
-            OnActionStarted?.Invoke(true);
+            OnRotateActionStarted?.Invoke(true);
         }
         //InputDirection = _rectTransform.anchoredPosition;
         OnHold?.Invoke(_controllerType, _currentActiveAction);
@@ -79,9 +83,15 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
 
     public void OnPointerUp(PointerEventData eventData) {
         OnRelease?.Invoke(_controllerType, _currentActiveAction);
-        if(_currentActiveAction == PlayerAction.Rotate) {
-            OnActionStarted?.Invoke(false);
+
+        if (_currentActiveAction == PlayerAction.Jump2) {
+            _currentActiveAction = PlayerAction.NotActive;
         }
+        if (_currentActiveAction == PlayerAction.Rotate) {
+            OnRotateActionStarted?.Invoke(false);
+        }
+        
+        
         transform.position = _initialPos;
         InputDirection = Vector2.zero;
     }
@@ -90,5 +100,5 @@ public enum ControllerType {
     LeftController, RightController, Both
 }
 public enum PlayerAction {
-    NotActive, Rotate, Jump
+    NotActive, Rotate, Jump, Jump2
 }
