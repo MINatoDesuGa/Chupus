@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<Controller<GameObject>> _controllers;
     private Dictionary<ControllerType, GameObject> _controllerCollection = new();
 
+    private float _jumpDistance;
+
     private CharacterController _characterController;
 
     private bool _isJumping = false;
@@ -58,6 +60,8 @@ public class PlayerController : MonoBehaviour
                 OnActivateController(ControllerType.Both, true);
                 break;
             case PlayerAction.Jump: 
+                _jumpDistance = GlobalVars.Instance.JumpPower;
+                GlobalVars.Instance.JumpPower = 0;
                 Jump();
                 break;
         }
@@ -97,6 +101,7 @@ public class PlayerController : MonoBehaviour
         if(_isJumping) return;
 
         _isJumping = true;
-        transform.DOJump(transform.position + (transform.forward * 2f), 1f, 1, .5f).OnComplete(() => _isJumping = false);
+        transform.DOJump(transform.position + (transform.forward * _jumpDistance), 1f, 1, .5f)
+        .OnComplete(() => _isJumping = false);
     }
 }

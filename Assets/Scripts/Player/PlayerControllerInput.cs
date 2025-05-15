@@ -19,6 +19,7 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     [SerializeField] private ControllerType _controllerType;
 
     private RectTransform _rectTransform;
+    [SerializeField]
     private PlayerAction _currentActiveAction;
     private Vector3 _initialPos;
     [SerializeField]
@@ -49,6 +50,8 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
         }
     }
     public void OnDrag(PointerEventData eventData) {
+        if (_currentActiveAction != PlayerAction.Rotate) return;
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickBackground,
             eventData.position,
