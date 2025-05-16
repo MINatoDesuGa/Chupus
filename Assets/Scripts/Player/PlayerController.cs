@@ -60,7 +60,11 @@ public class PlayerController : MonoBehaviour
                 OnActivateController(ControllerType.Both, true);
                 break;
             case PlayerAction.Jump2:
-            case PlayerAction.Jump: 
+            case PlayerAction.Jump:
+                if (SkillCancelHandler.IsSkillCancelled) {
+                    SkillCancelHandler.IsSkillCancelled = false;
+                    return;
+                }
                 _jumpDistance = GlobalVars.Instance.JumpPower;
                 GlobalVars.Instance.JumpPower = 0;
                 Jump();

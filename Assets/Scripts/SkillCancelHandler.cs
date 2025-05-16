@@ -6,8 +6,8 @@ public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
      * On active skill, enable this right on top of the skill button
      * on enter and release on top of this obj, cancel the skill
      */
+    public static bool IsSkillCancelled = false;
     [SerializeField] private Image _skillCancelImg;
-    private bool _canCancelSkill = false;
     //===============================================================================
     private void OnValidate() {
         _skillCancelImg = GetComponent<Image>();
@@ -25,24 +25,36 @@ public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
     //================================================================================
     public void OnPointerEnter(PointerEventData eventData) {
         _skillCancelImg.color = Color.red;
-        _canCancelSkill = true;
+        IsSkillCancelled = true;
     }
     public void OnPointerExit(PointerEventData eventData) {
         _skillCancelImg.color = Color.white;
-        _canCancelSkill = false;
+        IsSkillCancelled = false;
     }
     private void OnControllerHold(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
+        switch(playerControllerInput.ControllerType) {
+            case ControllerType.LeftController:
+                transform.position = new Vector3(
+                playerControllerInput.transform.position.x + 100f,
+                playerControllerInput.transform.position.y + 300f,
+                playerControllerInput.transform.position.z
+            );
+                break;
+            case ControllerType.RightController:
+                transform.position = new Vector3(
+                playerControllerInput.transform.position.x - 100f,
+                playerControllerInput.transform.position.y + 300f,
+                playerControllerInput.transform.position.z
+            );
+                break;
+        }
+        
         gameObject.SetActive(true);
     }
     private void OnControllerRelease(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
-        if (_canCancelSkill) {
-            ///TODO: handle cancel skill 
-            _skillCancelImg.color = Color.white;
-            _canCancelSkill = false;
-            Debug.Log("skill cancel trigger");
-        }
+        _skillCancelImg.color = Color.white;
         gameObject.SetActive(false);
     }
 }
