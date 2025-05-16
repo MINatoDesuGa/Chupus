@@ -7,6 +7,10 @@ public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
      * on enter and release on top of this obj, cancel the skill
      */
     public static bool IsSkillCancelled = false;
+
+    private const float X_POS_OFFSET_PERCENT = 0.25f;
+    private const float Y_POS_OFFSET_PERCENT = 0.75f;
+
     [SerializeField] private Image _skillCancelImg;
     //===============================================================================
     private void OnValidate() {
@@ -33,22 +37,7 @@ public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
     private void OnControllerHold(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
-        switch(playerControllerInput.ControllerType) {
-            case ControllerType.LeftController:
-                transform.position = new Vector3(
-                playerControllerInput.transform.position.x + 100f,
-                playerControllerInput.transform.position.y + 300f,
-                playerControllerInput.transform.position.z
-            );
-                break;
-            case ControllerType.RightController:
-                transform.position = new Vector3(
-                playerControllerInput.transform.position.x - 100f,
-                playerControllerInput.transform.position.y + 300f,
-                playerControllerInput.transform.position.z
-            );
-                break;
-        }
+        HandleUIPositioning(playerControllerInput.ControllerType);
         
         gameObject.SetActive(true);
     }
@@ -56,6 +45,22 @@ public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
         _skillCancelImg.color = Color.white;
         gameObject.SetActive(false);
+    }
+    private void HandleUIPositioning(ControllerType controllerType) {
+        switch (controllerType) {
+            case ControllerType.LeftController:
+                transform.position = new Vector3(
+                Screen.width * X_POS_OFFSET_PERCENT,
+                Screen.height * Y_POS_OFFSET_PERCENT, 0
+            );
+                break;
+            case ControllerType.RightController:
+                transform.position = new Vector3(
+                Screen.width * (1-X_POS_OFFSET_PERCENT),
+                Screen.height * Y_POS_OFFSET_PERCENT, 0
+            );
+                break;
+        }
     }
 }
 public enum Skills {

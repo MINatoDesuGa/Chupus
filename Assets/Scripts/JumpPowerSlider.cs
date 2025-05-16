@@ -6,6 +6,9 @@ public class JumpPowerSlider : MonoBehaviour
 {
     public static bool IsJumpSliderRunning = false;
 
+    private const float X_POS_OFFSET_PERCENT = 0.05f;
+    private const float Y_POS_OFFSET_PERCENT = 0.55f;
+
     [SerializeField] private Slider _slider;
     [SerializeField] private float _sliderMoveSpeed = 10f;
 
@@ -28,6 +31,8 @@ public class JumpPowerSlider : MonoBehaviour
     private void OnControllerHold(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction != PlayerAction.Jump) return;
 
+        HandleUIPositioning(playerControllerInput.ControllerType);
+
         gameObject.SetActive(true);
         ResetCoroutine();
         IsJumpSliderRunning = true;
@@ -42,10 +47,25 @@ public class JumpPowerSlider : MonoBehaviour
     }
     private void OnControllerRelease(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
-
+        gameObject.SetActive(false);
         IsJumpSliderRunning = false;
         _slider.value = 0f;
-        gameObject.SetActive(false);
+    }
+    private void HandleUIPositioning(ControllerType controllerType) {
+        switch (controllerType) {
+            case ControllerType.LeftController:
+                transform.position = new Vector3(
+                    Screen.width * X_POS_OFFSET_PERCENT,
+                    Screen.height * Y_POS_OFFSET_PERCENT, 0
+                );
+                break;
+            case ControllerType.RightController:
+                transform.position = new Vector3(
+                    Screen.width * (1f - X_POS_OFFSET_PERCENT),
+                    Screen.height * Y_POS_OFFSET_PERCENT, 0
+                );
+                break;
+        }
     }
     private void ResetCoroutine() {
         if (_sliderCoroutine != null) {
