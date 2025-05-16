@@ -27,26 +27,26 @@ public class PlayerControllerView : MonoBehaviour
         }
         _controllers.Clear();
     }
-    private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
-        switch(playerAction) {
+    private void OnControllerHold(PlayerControllerInput playerControllerInput) {
+        switch(playerControllerInput.CurrentActiveAction) {
             case PlayerAction.Rotate:
-                _controllerCollection[controllerType].color = Color.yellow;
-                _controllerCollection[controllerType].transform.localScale = Vector3.one * SCALE_DOWN_VAL;
-                break;
-            case PlayerAction.Jump:
-                _controllerCollection[controllerType].color = Color.red;
+                _controllerCollection[playerControllerInput.ControllerType].color = Color.yellow;
+                _controllerCollection[playerControllerInput.ControllerType].transform.localScale = Vector3.one * SCALE_DOWN_VAL;
+                break;                
+            case PlayerAction.Jump:  
+                _controllerCollection[playerControllerInput.ControllerType].color = Color.red;
                 break;
         }
         
     }
-    private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
-        if (playerAction == PlayerAction.Rotate) {
-            _controllerCollection[controllerType].color = Color.white;
-            _controllerCollection[controllerType].transform.localScale = Vector3.one;
+    private void OnControllerRelease(PlayerControllerInput playerControllerInput) {
+        if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) {
+            _controllerCollection[playerControllerInput.ControllerType].color = Color.white;
+            _controllerCollection[playerControllerInput.ControllerType].transform.localScale = Vector3.one;
             return;
         }
 
-        _controllerCollection[controllerType].color = Color.white;
+        _controllerCollection[playerControllerInput.ControllerType].color = Color.white;
     }
 }
 [Serializable]

@@ -43,10 +43,10 @@ public class PlayerController : MonoBehaviour
         }
         _controllers.Clear();
     }
-    private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
-        switch(playerAction) {
+    private void OnControllerHold(PlayerControllerInput playerControllerInput) {
+        switch(playerControllerInput.CurrentActiveAction) {
             case PlayerAction.Rotate:
-                OnActivateController(controllerType, false);
+                OnActivateController(playerControllerInput.ControllerType, false);
                 break;
             case PlayerAction.Jump:
                 ///TODO: power slider enable (Maybe cancel based or loop slider low to high)
@@ -54,8 +54,8 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-    private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
-        switch(playerAction) {
+    private void OnControllerRelease(PlayerControllerInput playerControllerInput) {
+        switch(playerControllerInput.CurrentActiveAction) {
             case PlayerAction.Rotate:
                 OnActivateController(ControllerType.Both, true);
                 break;

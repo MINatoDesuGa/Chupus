@@ -9,23 +9,29 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
     */
     private const float MAX_DRAG_DISTANCE = 50f;
 
-    public static event Action<ControllerType, PlayerAction> OnHold;
-    public static event Action<ControllerType, PlayerAction> OnRelease;
+    public static event Action<PlayerControllerInput> OnHold;
+    public static event Action<PlayerControllerInput> OnRelease;
     public static event Action<bool> OnRotateActionStarted;
 
     //public static Vector2 _currentPos;
     public static Vector2 InputDirection;
 
     [SerializeField] private ControllerType _controllerType;
+    public ControllerType ControllerType { 
+        get { return _controllerType; }
+        private set { _controllerType = value; }
+    }
 
     private RectTransform _rectTransform;
     [SerializeField]
     private PlayerAction _currentActiveAction;
+    public PlayerAction CurrentActiveAction {
+        get { return _currentActiveAction; }
+        private set { _currentActiveAction = value; }
+    }
     private Vector3 _initialPos;
     [SerializeField]
     private RectTransform joystickBackground;
-    
-
     //====================================================================
     private void Start() {
         _rectTransform = GetComponent<RectTransform>();
@@ -78,11 +84,11 @@ public class PlayerControllerInput : MonoBehaviour, IPointerDownHandler, IPointe
             OnRotateActionStarted?.Invoke(true);
         }
         //InputDirection = _rectTransform.anchoredPosition;
-        OnHold?.Invoke(_controllerType, _currentActiveAction);
+        OnHold?.Invoke(this);
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        OnRelease?.Invoke(_controllerType, _currentActiveAction);
+        OnRelease?.Invoke(this);
 
         if (_currentActiveAction == PlayerAction.Jump2) {
             _currentActiveAction = PlayerAction.NotActive;

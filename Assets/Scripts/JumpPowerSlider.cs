@@ -25,8 +25,8 @@ public class JumpPowerSlider : MonoBehaviour
         PlayerControllerInput.OnRelease -= OnControllerRelease;
     }
     //=====================================================
-    private void OnControllerHold(ControllerType controllerType, PlayerAction playerAction) {
-        if (playerAction != PlayerAction.Jump) return;
+    private void OnControllerHold(PlayerControllerInput playerControllerInput) {
+        if (playerControllerInput.CurrentActiveAction != PlayerAction.Jump) return;
 
         gameObject.SetActive(true);
         ResetCoroutine();
@@ -40,8 +40,8 @@ public class JumpPowerSlider : MonoBehaviour
             }
         }
     }
-    private void OnControllerRelease(ControllerType controllerType, PlayerAction playerAction) {
-        if (playerAction == PlayerAction.Rotate) return;
+    private void OnControllerRelease(PlayerControllerInput playerControllerInput) {
+        if (playerControllerInput.CurrentActiveAction == PlayerAction.Rotate) return;
 
         IsJumpSliderRunning = false;
         _slider.value = 0f;
