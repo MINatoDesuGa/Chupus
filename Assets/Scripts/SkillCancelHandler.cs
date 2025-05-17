@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class SkillCancelHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
-    /* TODO:
+    /* 
      * On active skill, enable this right on top of the skill button
      * on enter and release on top of this obj, cancel the skill
      */
