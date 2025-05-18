@@ -54,6 +54,9 @@ MonoBehaviour:
     GenericRef: {fileID: 6020362588131974516}
   - Type: 1
     GenericRef: {fileID: 4019492725665152408}
+  _groundCheckLayer:
+    serializedVersion: 2
+    m_Bits: 384
 --- !u!54 &7848175200126665823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -70,16 +73,16 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 896
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &3010197323975382340
 GameObject:
@@ -286,7 +289,7 @@ GameObject:
   - component: {fileID: 5631599910318783744}
   - component: {fileID: 2038329116479685348}
   - component: {fileID: 6844165827234967148}
-  - component: {fileID: 351395925234275937}
+  - component: {fileID: 8976350165167133033}
   m_Layer: 6
   m_Name: RightLeg
   m_TagString: Untagged
@@ -362,8 +365,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &351395925234275937
-CapsuleCollider:
+--- !u!135 &8976350165167133033
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -372,18 +375,16 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 896
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 3
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6020362588131974516
 GameObject:
@@ -396,7 +397,7 @@ GameObject:
   - component: {fileID: 6695142442672627430}
   - component: {fileID: 9214500755355851496}
   - component: {fileID: 4761150337797874699}
-  - component: {fileID: 5939366997514589423}
+  - component: {fileID: 5921295179075479355}
   m_Layer: 6
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -472,8 +473,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5939366997514589423
-CapsuleCollider:
+--- !u!135 &5921295179075479355
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -482,16 +483,14 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 896
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 3
+  m_Radius: 1.0000001
   m_Center: {x: 0, y: 0, z: 0}

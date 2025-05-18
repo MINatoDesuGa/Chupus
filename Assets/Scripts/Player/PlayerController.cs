@@ -5,25 +5,35 @@ using DG.Tweening;
 public class PlayerController : MonoBehaviour 
 {
     private const float DEFAULT_ROTATION_zVAL = 25f;
+    private const float GROUND_CHECK_RADIUS = 1f; //sphere radius of groundCheck obj
 
     [SerializeField] private List<Controller<GameObject>> _controllers;
+    [SerializeField] private LayerMask _groundCheckLayer;
     private Dictionary<ControllerType, GameObject> _controllerCollection = new();
 
     private float _jumpDistance;
 
-    private CharacterController _characterController;
+    private Rigidbody _rigidBody;
 
     private bool _isJumping = false;
+    private bool _isGrounded = false;
     //============================================================
+    private void OnValidate() {
+        if(_rigidBody == null) _rigidBody = GetComponent<Rigidbody>();
+    }
     private void Start() {
         Init();
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Jump();
+            NewJump();
+            //Jump();
         }
         ///TODO: change this to event based
         Rotate();
+    }
+    private void FixedUpdate() {
+        GroundedCheck();
     }
     private void OnEnable() {
         PlayerControllerInput.OnHold += OnControllerHold;
@@ -35,8 +45,18 @@ public class PlayerController : MonoBehaviour
         PlayerControllerInput.OnRelease -= OnControllerRelease;
     }
     //=============================================================
+    private void GroundedCheck() {
+        _isGrounded = Physics.CheckSphere(  _controllerCollection[ControllerType.LeftController].transform.position, 
+                                            GROUND_CHECK_RADIUS, _groundCheckLayer);
+        if (_isGrounded) return;
+        _isGrounded = Physics.CheckSphere(_controllerCollection[ControllerType.RightController].transform.position,
+                                            GROUND_CHECK_RADIUS, _groundCheckLayer);
+    }
+    private void NewJump() {
+        if (!_isGrounded) return;
+        _rigidBody.AddForce((Vector3.up * 5f) + (transform.forward * _jumpDistance), ForceMode.Impulse);
+    }
     private void Init() {
-        _characterController = GetComponent<CharacterController>();
         foreach (var controller in _controllers) {
             _controllerCollection[controller.Type] = controller.GenericRef;
             Debug.Log($"{controller.GenericRef.transform.rotation}");
@@ -67,7 +87,8 @@ public class PlayerController : MonoBehaviour
                 }
                 _jumpDistance = GlobalVars.Instance.JumpPower;
                 GlobalVars.Instance.JumpPower = 0;
-                Jump();
+                NewJump();
+                //Jump();
                 break;
         }
         
