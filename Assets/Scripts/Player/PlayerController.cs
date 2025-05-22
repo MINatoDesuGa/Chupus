@@ -11,12 +11,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _groundCheckLayer;
     private Dictionary<ControllerType, GameObject> _controllerCollection = new();
 
-    private float _jumpDistance;
-
     [SerializeField] private Rigidbody _rigidBody;
 
+    private float _jumpDistance;
     private bool _isJumping = false;
     private bool _isGrounded = false;
+    private Vector3 _startPos;
     //============================================================
     private void OnValidate() {
         if(_rigidBody == null) _rigidBody = GetComponent<Rigidbody>();
@@ -38,11 +38,12 @@ public class PlayerController : MonoBehaviour
     private void OnEnable() {
         PlayerControllerInput.OnHold += OnControllerHold;
         PlayerControllerInput.OnRelease += OnControllerRelease;
-
+        GameOverTrigger.OnPlayerOut += OnPlayerOut;
     }
     private void OnDisable() {
         PlayerControllerInput.OnHold -= OnControllerHold;
         PlayerControllerInput.OnRelease -= OnControllerRelease;
+        GameOverTrigger.OnPlayerOut -= OnPlayerOut;
     }
     //=============================================================
     private void GroundedCheck() {
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
         _rigidBody.AddForce((Vector3.up * 5f) + (transform.forward * _jumpDistance), ForceMode.Impulse);
     }
     private void Init() {
+        _startPos = transform.position;
         foreach (var controller in _controllers) {
             _controllerCollection[controller.Type] = controller.GenericRef;
             Debug.Log($"{controller.GenericRef.transform.rotation}");
@@ -116,6 +118,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         
+    }
+    private void OnPlayerOut() {
+        transform.DOMove(_startPos, 1f).SetEase(Ease.OutSine);
     }
     private void Rotate() {
         var input = PlayerControllerInput.InputDirection;
