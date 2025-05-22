@@ -30,7 +30,7 @@ public class JumpPowerSlider : MonoBehaviour
     //=====================================================
     private void OnControllerHold(PlayerControllerInput playerControllerInput) {
         if (playerControllerInput.CurrentActiveAction != PlayerAction.Jump) return;
-
+     //   Debug.Log("jump slider start");
         HandleUIPositioning(playerControllerInput.ControllerType);
 
         gameObject.SetActive(true);

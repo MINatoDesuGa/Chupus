@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private float _jumpDistance;
 
-    private Rigidbody _rigidBody;
+    [SerializeField] private Rigidbody _rigidBody;
 
     private bool _isJumping = false;
     private bool _isGrounded = false;
@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
         if (_isGrounded) return;
         _isGrounded = Physics.CheckSphere(_controllerCollection[ControllerType.RightController].transform.position,
                                             GROUND_CHECK_RADIUS, _groundCheckLayer);
+
+     //   Debug.Log($"is grounded: {_isGrounded}");
     }
     private void NewJump() {
         if (!_isGrounded) return;
